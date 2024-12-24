@@ -1,0 +1,102 @@
+name: Terraform Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Terraform changes in changed Terramate stacks
+
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: read
+      checks: read
+
+    runs-on: ubuntu-latest
+
+    steps:
+      ### Check out the code
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      ### Install tooling
+
+      - name: Install Terramate
+        uses: terramate-io/terramate-action@v2
+
+      - name: Install asdf
+        uses: asdf-vm/actions/setup@v3
+
+      - name: Install Terraform with asdf
+        run: |
+          asdf plugin add terraform
+          asdf install terraform
+
+      - name: Install OpenTofu with asdf
+        run: |
+          asdf plugin add opentofu
+          asdf install opentofu
+
+      ### Check for changed stacks
+
+      - name: List changed stacks
+        id: list-changed
+        run: terramate list -C stacks --changed
+
+      ### Configure cloud credentials
+
+      - name: Configure AWS credentials
+        if: steps.list-changed.outputs.stdout
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github
+        env:
+          AWS_REGION: us-east-1
+          AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+
+      - name: Verify AWS credentials
+        if: steps.list-changed.outputs.stdout
+        run: aws sts get-caller-identity
+
+      ### Run the Terraform deployment via Terramate in each changed stack
+
+      - name: Run Terraform init in all changed stacks
+        if: steps.list-changed.outputs.stdout
+        run: |
+          terramate script run \
+            -C stacks \
+            --parallel 1 \
+            --changed \
+            init
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Run Terraform apply in all changed stacks
+        id: deploy
+        if: steps.list-changed.outputs.stdout
+        run: |
+          terramate script run \
+            -C stacks \
+            --parallel 5 \
+            --changed \
+            deploy
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Run drift detection in all deployed stacks
+        if: steps.list-changed.outputs.stdout && ! cancelled() && steps.deploy.outcome != 'skipped'
+        run: |
+          terramate script run \
+            -C stacks \
+            --parallel 5 \
+            --changed \
+            drift detect
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

@@ -4,8 +4,16 @@ resource "aws_kms_key" "state-bucket-key" {
   deletion_window_in_days = 10
   description             = "This key is used to encrypt bucket objects"
 }
+resource "null_resource" "delete_objects" {
+  provisioner "local-exec" {
+    command = "          aws s3api list-object-versions --bucket example-bucket --query \"Versions[].{Key: Key, VersionId: VersionId}\" --output json | \\\r\n          jq -r '.[] | \"aws s3api delete-object --bucket example-bucket --key \\(.Key) --version-id \\(.VersionId)\"' | bash\r\n"
+  }
+}
 resource "aws_s3_bucket" "state-bucket" {
-  bucket              = "vdfiot-template-dev-backend"
+  bucket = "vdfiot-template-dev-backend"
+  depends_on = [
+    null_resource.delete_objects,
+  ]
   force_destroy       = true
   object_lock_enabled = true
   tags = {

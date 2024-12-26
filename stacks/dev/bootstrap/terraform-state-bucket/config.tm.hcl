@@ -5,6 +5,15 @@ generate_hcl "_main.tf" {
       deletion_window_in_days = 10
     }
 
+    resource "null_resource" "delete_objects" {
+      provisioner "local-exec" {
+        command = <<EOT
+          aws s3api list-object-versions --bucket example-bucket --query "Versions[].{Key: Key, VersionId: VersionId}" --output json | \
+          jq -r '.[] | "aws s3api delete-object --bucket example-bucket --key \(.Key) --version-id \(.VersionId)"' | bash
+        EOT
+      }
+    }
+
     resource "aws_s3_bucket" "state-bucket" {
       bucket = global.terraform.backend.bucket
       force_destroy = true
@@ -13,6 +22,7 @@ generate_hcl "_main.tf" {
       tags = {
         Name = "S3 Remote Terraform State Store"
       }
+      depends_on = [null_resource.delete_objects]
     }
 
     resource "aws_s3_bucket_versioning" "state-bucket" {

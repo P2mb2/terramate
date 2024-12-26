@@ -9,7 +9,6 @@ resource "aws_s3_bucket" "state-bucket" {
   depends_on = [
     null_resource.delete_objects,
   ]
-  force_destroy       = true
   object_lock_enabled = true
   tags = {
     Name = "S3 Remote Terraform State Store"

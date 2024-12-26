@@ -7,7 +7,7 @@ generate_hcl "_main.tf" {
 
     resource "aws_s3_bucket" "state-bucket" {
       bucket = global.terraform.backend.bucket
-      force_destroy = true
+
       object_lock_enabled = true
 
       tags = {

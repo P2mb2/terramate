@@ -13,7 +13,6 @@ generate_hcl "_main.tf" {
       tags = {
         Name = "S3 Remote Terraform State Store"
       }
-      depends_on = [null_resource.delete_objects]
     }
 
     resource "aws_s3_bucket_versioning" "state-bucket" {

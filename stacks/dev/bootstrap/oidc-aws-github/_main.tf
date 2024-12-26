@@ -3,7 +3,7 @@
 module "oidc_github" {
   attach_admin_policy = true
   github_repositories = [
-    "P2mb2/terramate:ref:refs/heads/main",
+    "P2mb2/terramate:*",
   ]
   source  = "unfunco/oidc-github/aws"
   version = "1.7.1"

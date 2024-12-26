@@ -1,3 +1,8 @@
+globals "terraform" "providers" "null" {
+      source  = "hashicorp/null"
+      version = "~> 3.0" # You can specify the latest version
+}
+
 generate_hcl "_main.tf" {
   content {
     resource "aws_kms_key" "state-bucket-key" {

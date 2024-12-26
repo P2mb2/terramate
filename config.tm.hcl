@@ -3,8 +3,8 @@ globals "terraform" {
 }
 
 globals "terraform" "backend" {
-  bucket = "terramate-example-terraform-state-backend"
-  region = "us-east-1"
+  bucket = "vdfiot-iot-template-terraform-state-backend"
+  region = "eu-central-1"
 }
 
 globals "aws" "oidc" {
@@ -19,6 +19,6 @@ globals "terraform" "providers" "aws" {
   source  = "hashicorp/aws"
   version = "~> 5.48"
   config = {
-    region = "us-east-1"
+    region = "eu-central-1"
   }
 }

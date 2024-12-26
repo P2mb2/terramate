@@ -15,7 +15,7 @@ globals "terraform" "backend" {
 
 globals "aws" "oidc" {
   github_repositories = [
-    "P2mb2/terramate:ref:refs/heads/main",
+    "P2mb2/terramate:*",
     # "another-org/another-repo:ref:refs/heads/main",
   ]
 }

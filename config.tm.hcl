@@ -2,6 +2,7 @@ globals "terraform" {
   version = "1.10.2"
   company = "vdfiot"
   project = "template"
+  repo = "terramate"
 }
 
 globals "terraform" "environment" {
@@ -15,7 +16,7 @@ globals "terraform" "backend" {
 
 globals "aws" "oidc" {
   github_repositories = [
-    "P2mb2/terramate:*",
+    "P2mb2/${global.terraform.repo}:*",
     # "another-org/another-repo:ref:refs/heads/main",
   ]
 }

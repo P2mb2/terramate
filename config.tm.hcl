@@ -2,7 +2,7 @@ globals "terraform" {
   version = "1.10.2"
   company = "vdfiot"
   project = "template"
-  repo = "terramate"
+  repo    = "terramate"
 }
 
 globals "terraform" "environment" {

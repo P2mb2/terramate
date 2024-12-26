@@ -11,31 +11,25 @@ script "init" {
 
 script "preview" {
   name        = "Terraform Deployment Preview"
-  description = "Create a preview of Terraform changes and synchronize it to Terramate Cloud"
+  description = "Create a preview of Terraform changes"
 
   job {
     commands = [
       ["terraform", "validate"],
-      ["terraform", "plan", "-out", "out.tfplan", "-detailed-exitcode", "-lock=false", {
-        sync_preview        = true
-        terraform_plan_file = "out.tfplan"
-      }],
+      ["terraform", "plan", "-out", "out.tfplan", "-detailed-exitcode", "-lock=false"],
     ]
   }
 }
 
 script "deploy" {
   name        = "Terraform Deployment"
-  description = "Run a full Terraform deployment cycle and synchronize the result to Terramate Cloud"
+  description = "Run a full Terraform deployment cycle"
 
   job {
     commands = [
       ["terraform", "validate"],
       ["terraform", "plan", "-out", "out.tfplan", "-lock=false"],
-      ["terraform", "apply", "-input=false", "-auto-approve", "-lock-timeout=5m", "out.tfplan", {
-        sync_deployment     = true
-        terraform_plan_file = "out.tfplan"
-      }],
+      ["terraform", "apply", "-input=false", "-auto-approve", "-lock-timeout=5m", "out.tfplan"],
     ]
   }
 }
@@ -46,10 +40,7 @@ script "drift" "detect" {
 
   job {
     commands = [
-      ["terraform", "plan", "-out", "out.tfplan", "-detailed-exitcode", "-lock=false", {
-        sync_drift_status   = true
-        terraform_plan_file = "out.tfplan"
-      }],
+      ["terraform", "plan", "-out", "out.tfplan", "-detailed-exitcode", "-lock=false"],
     ]
   }
 }
@@ -60,10 +51,7 @@ script "drift" "reconcile" {
 
   job {
     commands = [
-      ["terraform", "apply", "-input=false", "-auto-approve", "-lock-timeout=5m", "drift.tfplan", {
-        sync_deployment     = true
-        terraform_plan_file = "drift.tfplan"
-      }],
+      ["terraform", "apply", "-input=false", "-auto-approve", "-lock-timeout=5m", "drift.tfplan"],
 
     ]
   }
@@ -80,11 +68,5 @@ script "terraform" "render" {
       ["terraform", "show", "-no-color", "out.tfplan"],
       ["echo", "```"],
     ]
-  }
-}
-
-script "safe-guard" {
-  job {
-    command = ["true"]
   }
 }

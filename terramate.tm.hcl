@@ -12,20 +12,9 @@ terramate {
     #   "outdated-code",
     # ]
 
-    # Configure the namespace of your Terramate Cloud organization
-    cloud {
-      organization = "terramate-demo"
-    }
-
     git {
       default_remote = "origin"
       default_branch = "main"
-    }
-
-    run {
-      env {
-        TF_PLUGIN_CACHE_DIR = "${terramate.root.path.fs.absolute}/.tf_plugin_cache_dir"
-      }
     }
 
     # Enable Terramate Scripts

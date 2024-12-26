@@ -29,4 +29,3 @@ globals "terraform" "providers" "aws" {
     region = "eu-central-1"
   }
 }
-

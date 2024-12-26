@@ -64,6 +64,7 @@ jobs:
         run: |
           terramate script run \
             -C stacks \
+            --no-tags bootstrap \
             --parallel 1 \
             --changed \
             init
@@ -76,6 +77,7 @@ jobs:
         run: |
           terramate script run \
             -C stacks \
+            --no-tags bootstrap \
             --parallel 5 \
             --changed \
             deploy
@@ -87,6 +89,7 @@ jobs:
         run: |
           terramate script run \
             -C stacks \
+            --no-tags bootstrap \
             --parallel 5 \
             --changed \
             drift detect

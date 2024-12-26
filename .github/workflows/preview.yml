@@ -72,6 +72,7 @@ jobs:
         run: |
           terramate script run \
             -C stacks \
+            --no-tags bootstrap \
             --changed \
             --parallel 1 \
             init
@@ -83,6 +84,7 @@ jobs:
         run: |
           terramate script run \
             -C stacks \
+            --no-tags bootstrap \
             --changed \
             --parallel 5 \
             --continue-on-error \

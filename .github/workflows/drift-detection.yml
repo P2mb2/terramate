@@ -60,6 +60,7 @@ jobs:
         run: |
           terramate script run \
             -C stacks \
+            --no-tags cicd-ignore \
             --parallel 1 \
             init
         env:
@@ -70,6 +71,7 @@ jobs:
         run: |
           terramate script run \
             -C stacks \
+            --no-tags cicd-ignore \
             --parallel 5 \
             --continue-on-error \
             -- \

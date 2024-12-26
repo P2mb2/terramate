@@ -50,7 +50,10 @@ jobs:
 
       - name: List changed stacks
         id: list-changed
-        run: terramate list -C stacks --changed
+        run: terramate list \
+          -C stacks \
+          --no-tags cicd-ignore \
+          --changed
 
       ### Configure cloud credentials
 
@@ -84,7 +87,7 @@ jobs:
         run: |
           terramate script run \
             -C stacks \
-            --no-tags bootstrap \
+            --no-tags cicd-ignore \
             --changed \
             --parallel 5 \
             --continue-on-error \

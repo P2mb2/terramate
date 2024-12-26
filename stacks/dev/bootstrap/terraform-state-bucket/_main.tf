@@ -6,6 +6,7 @@ resource "aws_kms_key" "state-bucket-key" {
 }
 resource "aws_s3_bucket" "state-bucket" {
   bucket              = "vdfiot-template-dev-backend"
+  force_destroy       = true
   object_lock_enabled = true
   tags = {
     Name = "S3 Remote Terraform State Store"

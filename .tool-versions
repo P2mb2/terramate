@@ -1,0 +1,3 @@
+terraform 1.10.2
+terramate 0.11.1
+pre-commit 3.6.2

@@ -17,6 +17,9 @@ terramate {
       default_branch = "main"
     }
 
-
+    # Enable Terramate Scripts
+    experiments = [
+      "scripts",
+    ]
   }
 }

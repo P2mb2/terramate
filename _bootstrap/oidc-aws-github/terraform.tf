@@ -1,7 +1,7 @@
 // TERRAMATE: GENERATED AUTOMATICALLY DO NOT EDIT
 
 terraform {
-  required_version = "1.8.5"
+  required_version = "1.10.2"
 }
 terraform {
   required_providers {

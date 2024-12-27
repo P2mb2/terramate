@@ -105,7 +105,7 @@ jobs:
           echo >>pr-comment.txt "#### Terraform Plan"
           echo >>pr-comment.txt
           echo >>pr-comment.txt '```terraform'
-          terramate run --changed -- terraform show -no-color out.tfplan 2>&1 | dd bs=1024 count=248 >>pr-comment.txt
+          terramate run --no-tags cicd-ignore --changed -- terraform show -no-color out.tfplan 2>&1 | dd bs=1024 count=248 >>pr-comment.txt
           echo >>pr-comment.txt '```'
           cat pr-comment.txt >>$GITHUB_STEP_SUMMARY
 

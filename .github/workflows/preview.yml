@@ -91,3 +91,7 @@ jobs:
             preview
         env:
           GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Debug Terraform Plan
+        if: failure()
+        run: cat out.tfplan

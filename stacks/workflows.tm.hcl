@@ -16,7 +16,7 @@ script "preview" {
   job {
     commands = [
       ["terraform", "validate"],
-      ["terraform", "plan", "-out", "out.tfplan", "-detailed-exitcode", "-lock=false"],
+      ["terraform", "plan", "-out", "out.tfplan", "-lock=false"],
     ]
   }
 }

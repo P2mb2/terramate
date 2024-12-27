@@ -50,10 +50,7 @@ jobs:
 
       - name: List changed stacks
         id: list-changed
-        run: terramate list \
-          -C stacks \
-          --no-tags cicd-ignore \
-          --changed
+        run: terramate list -C stacks --no-tags cicd-ignore --changed
 
       ### Configure cloud credentials
 
@@ -91,11 +88,10 @@ jobs:
             --changed \
             --parallel 5 \
             --continue-on-error \
-            -- \
             preview
         env:
           GITHUB_TOKEN: ${{ github.token }}
-
+            
       - name: Generate Preview Comment
         if: steps.list-changed.outputs.stdout
         id: comment
@@ -105,12 +101,13 @@ jobs:
           echo >>pr-comment.txt '```bash'
           echo >>pr-comment.txt "${{ steps.list-changed.outputs.stdout }}"
           echo >>pr-comment.txt '```'
-          echo >>pr-comment.txt
-          echo >>pr-comment.txt "#### Terraform Plan"
+          echo >>pr-comment.txt "<details>"
+          echo >>pr-comment.txt "<summary>Terraform Plan</summary>"
           echo >>pr-comment.txt
           echo >>pr-comment.txt '```terraform'
-          terramate run --changed -- terraform show -no-color out.tfplan 2>&1 | dd bs=1024 count=248 >>pr-comment.txt
+          terramate run --no-tags cicd-ignore --changed -- terraform show -no-color out.tfplan 2>&1 | dd bs=1024 count=248 >>pr-comment.txt
           echo >>pr-comment.txt '```'
+          echo >>pr-comment.txt "</details>"
           cat pr-comment.txt >>$GITHUB_STEP_SUMMARY
 
       - name: Inform about no Changed Stacks

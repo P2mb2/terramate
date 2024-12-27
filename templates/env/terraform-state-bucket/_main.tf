@@ -5,7 +5,7 @@ resource "aws_kms_key" "state-bucket-key" {
   description             = "This key is used to encrypt bucket objects"
 }
 resource "aws_s3_bucket" "state-bucket" {
-  bucket              = "vdfiot-template-dev-backend"
+  bucket              = "vdfiot-template-env-backend"
   object_lock_enabled = true
   tags = {
     Name = "S3 Remote Terraform State Store"
@@ -28,7 +28,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "state-bucket" {
 }
 resource "aws_dynamodb_table" "terraform-lock" {
   hash_key      = "LockID"
-  name          = "vdfiot-template-dev-dynamodb"
+  name          = "vdfiot-template-env-dynamodb"
   read_capacity = 5
   tags = {
     Name = "DynamoDB Terraform State Lock Table"

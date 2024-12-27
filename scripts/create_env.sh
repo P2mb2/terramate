@@ -89,6 +89,9 @@ execute_task "Running terraform migrate state..." \
 execute_task "Removing local tfstate files..." \
     "terramate run -C stacks/\"$ENVIRONMENT\" --tags bootstrap rm *.tfstate*"
 
+execute_task "Formatting Terraform..." \
+    "terramate fmt"
+
 execute_task "Commiting changes..." \
     "git add . && git commit -m \"remove local state for \"$ENVIRONMENT\" bootstrap stacks\""
 

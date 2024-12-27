@@ -63,7 +63,10 @@ execute_task "Creating config.tm.hcl for environment $ENVIRONMENT..." \
 }' > \"stacks/$ENVIRONMENT/config.tm.hcl\""
 
 execute_task "Creating new Terramate code.." \
-    "terramate generate -C stacks/$ENVIRONMENT || true"
+    "terramate generate -C stacks/$ENVIRONMENT"
+
+execute_task "Commiting new generated code..." \
+    "git add . && git commit -m \"$ENVIRONMENT stacks added\""
 
 execute_task "Running terraform init on bootstrap stacks..." \
     "terramate run -C stacks/\"$ENVIRONMENT\" --tags bootstrap terraform init"
@@ -78,7 +81,7 @@ execute_task "Removing no-backend tag on bootstrap stacks..." \
     s/\"no-backend\"//' {} \;"
 
 execute_task "Running Terramate generate command..." \
-    "terramate generate -C stacks/$ENVIRONMENT || true"
+    "terramate generate -C stacks/$ENVIRONMENT"
 
 execute_task "Commiting new generated code..." \
     "git add . && git commit -m \"remove no-backend tags on \"$ENVIRONMENT\" bootstrap stacks\""

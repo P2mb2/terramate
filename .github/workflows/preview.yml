@@ -91,7 +91,33 @@ jobs:
             preview
         env:
           GITHUB_TOKEN: ${{ github.token }}
+            
+      - name: Generate Preview Comment
+        if: steps.list-changed.outputs.stdout
+        id: comment
+        run: |
+          echo >>pr-comment.txt "### List of Changed Stacks"
+          echo >>pr-comment.txt
+          echo >>pr-comment.txt '```bash'
+          echo >>pr-comment.txt "${{ steps.list-changed.outputs.stdout }}"
+          echo >>pr-comment.txt '```'
+          echo >>pr-comment.txt
+          echo >>pr-comment.txt "#### Terraform Plan"
+          echo >>pr-comment.txt
+          echo >>pr-comment.txt '```terraform'
+          terramate run --changed -- terraform show -no-color out.tfplan 2>&1 | dd bs=1024 count=248 >>pr-comment.txt
+          echo >>pr-comment.txt '```'
+          cat pr-comment.txt >>$GITHUB_STEP_SUMMARY
 
-      - name: Debug Terraform Plan
-        if: failure()
-        run: cat out.tfplan
+      - name: Inform about no Changed Stacks
+        if: (!steps.list-changed.outputs.stdout)
+        run: |
+          echo >>pr-comment.txt '### No changed stacks.'
+          cat pr-comment.txt >>$GITHUB_STEP_SUMMARY
+
+      - name: Publish Plans for Changed Stacks
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: terraform-plan
+          path: pr-comment.txt

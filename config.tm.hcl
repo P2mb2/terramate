@@ -13,9 +13,9 @@ globals "terraform" {
 }
 
 globals "terraform" "backend" {
-  bucket = "${global.project.company}-${global.project.name}-${global.terraform.environment.name}-backend"
+  bucket         = "${global.project.company}-${global.project.name}-${global.terraform.environment.name}-backend"
   dynamodb_table = "${global.project.company}-${global.project.name}-${global.terraform.environment.name}-dynamodb"
-  region = "eu-central-1"
+  region         = "eu-central-1"
 }
 
 globals "aws" "oidc" {

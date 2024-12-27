@@ -63,7 +63,7 @@ execute_task "Creating config.tm.hcl for environment $ENVIRONMENT..." \
 }' > \"stacks/$ENVIRONMENT/config.tm.hcl\""
 
 execute_task "Creating new Terramate code.." \
-    "terramate generate"
+    "terramate generate -C stacks/$ENVIRONMENT"
 
 execute_task "Running terraform init on bootstrap stacks..." \
     "terramate run -C stacks/\"$ENVIRONMENT\" --tags bootstrap terraform init"

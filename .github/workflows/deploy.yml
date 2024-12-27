@@ -42,10 +42,7 @@ jobs:
 
       - name: List changed stacks
         id: list-changed
-        run: terramate list \
-          -C stacks \
-          --no-tags cicd-ignore \
-          --changed
+        run: terramate list -C stacks --no-tags cicd-ignore --changed
 
       ### Configure cloud credentials
 

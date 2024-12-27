@@ -1,5 +1,5 @@
 globals "project" {
-  name = "template"
+  name    = "template"
   company = "vdfiot"
   repo    = "terramate"
 }

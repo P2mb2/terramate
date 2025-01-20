@@ -1,25 +1,34 @@
+import {
+  source = "/imports/mixins/*.tm.hcl"
+}
+
+globals "project" {
+  name            = "terramate"
+  confidentiality = "C3"
+  securityZone    = "I-A"
+}
+
+globals "terraform" {
+  version = "> 1.0"
+}
+
+# Following Globals are Standards. You should not need to change anything below.
+globals "backend" {
+  bucket         = "iot-terraform-shared-state-storage-s3"
+  dynamodb_table = "terraform-state-lock-dynamo"
+  region         = "eu-west-1"
+  key            = "project/${global.project.name}"
+  profile        = "root"
+}
+
 terramate {
-  required_version = ">= 0.11.1"
-  # required_version_allow_prereleases = true
+  required_version = ">= 0.11.2"
+
   config {
-
-    # Optionally disable safe guards
-    # Learn more: https://terramate.io/docs/cli/orchestration/safeguards
-    # disable_safeguards = [
-    #   "git-untracked",
-    #   "git-uncommitted",
-    #   "git-out-of-sync",
-    #   "outdated-code",
-    # ]
-
-    git {
-      default_remote = "origin"
-      default_branch = "main"
-    }
-
-    # Enable Terramate Scripts
     experiments = [
       "scripts",
+      "outputs-sharing"
     ]
   }
 }
+

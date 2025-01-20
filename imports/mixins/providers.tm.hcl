@@ -1,12 +1,12 @@
-generate_hcl "terraform.tf" {
-  # condition = tm_contains(terramate.stack.tags, "terraform")
+generate_hcl "_provider.tf" {
 
   lets {
-    required_providers = { for k, v in tm_try(global.terraform.providers, {}) :
-      k => {
-        source  = v.source
-        version = v.version
-        } if tm_alltrue([
+    required_providers = {
+      for k, v in tm_try(global.terraform.providers, {}) :
+      k => tm_merge(
+        { source = tm_try(v.source, null) },
+        tm_try({ version = v.version }, {})
+        ) if tm_alltrue([
           tm_try(v.enabled, true),
           tm_length(tm_split(".", k)) == 1,
       ])
@@ -30,13 +30,10 @@ generate_hcl "terraform.tf" {
   }
 
   content {
-    # terraform version constraints
-    terraform {
-      required_version = tm_try(global.terraform.version, "~> 1.6")
-    }
-
     # Provider version constraints
     terraform {
+      required_version = tm_try(global.terraform.version, "> 1.0")
+
       tm_dynamic "required_providers" {
         attributes = let.required_providers
       }

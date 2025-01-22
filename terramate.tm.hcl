@@ -1,18 +1,11 @@
+
+# Terramate settings in this file should not be changed.
+# Check configs.tm.hcl for project level configs.
+
 import {
   source = "/imports/mixins/*.tm.hcl"
 }
 
-globals "project" {
-  name            = "terramate"
-  confidentiality = "C3"
-  securityZone    = "I-A"
-}
-
-globals "terraform" {
-  version = "> 1.0"
-}
-
-# Following Globals are Standards. You should not need to change anything below.
 globals "backend" {
   bucket         = "iot-terraform-shared-state-storage-s3"
   dynamodb_table = "terraform-state-lock-dynamo"

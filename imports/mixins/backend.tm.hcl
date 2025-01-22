@@ -1,15 +1,12 @@
-generate_hcl "backend.tf" {
-  condition = !tm_contains(terramate.stack.tags, "no-backend")
-
+generate_hcl "_backend.tf" {
   content {
-    terraform {
-      backend "s3" {
-        region         = global.terraform.backend.region
-        bucket         = global.terraform.backend.bucket
-        key            = tm_try(global.terraform.backend.key, "terraform/stacks/by-id/${terramate.stack.id}/terraform.tfstate")
-        encrypt        = true
-        dynamodb_table = tm_try(global.terraform.backend.dynamodb_table, "terraform-lock")
-      }
-    }
+    # terraform {
+    #   backend "s3" {
+    #     bucket         = global.backend.bucket
+    #     dynamodb_table = global.backend.dynamodb_table
+    #     region         = global.backend.region
+    #     key            = "${global.backend.key}/stacks/${terramate.stack.id}/terraform.tfstate"
+    #   }
+    # }
   }
 }
